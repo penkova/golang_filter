@@ -44,7 +44,7 @@ func init() {
 	}
 	db = session.DB("crudmongo")
 }
-// -- Connection cars and people collections
+// -- Connection to cars and people collections
 func CollectionPerson() *mgo.Collection {
 	return db.C("peopledb")
 }
@@ -53,7 +53,7 @@ func CollectionCars() *mgo.Collection {
 	return db.C("carsdb")
 }
 
-//// -- Finding Cars by some parameters
+// -- Finding Cars by some parameters
 func FindCarModel(model... string) ([]Cars, error) {
 	res := []Cars{}
 	if err := CollectionCars().Find(bson.M{"model": bson.M{"$in": model}}).All(&res); err != nil {
@@ -65,16 +65,25 @@ func FindCarModel(model... string) ([]Cars, error) {
 func FindCarAge(carAge... int) ([]Cars, error) {
 	res := []Cars{}
 	fmt.Printf("\n carAge %s", carAge)
-	//for i:=0; i<len(carAge); i++ {
-	//	fmt.Printf("\n value %s",carAge[i])
-	//	valueAge, _ := strconv.Atoi(carAge[i])
-	//	if err := CollectionCars().Find(bson.M{"age": valueAge}).All(&res); err != nil {
-	//		return nil, err
-	//	}
-	//
-	//}
-	//return res, nil
 	if err := CollectionCars().Find(bson.M{"age": bson.M{"$in": carAge }}).All(&res); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+//	-- Finding People by some parameters
+func FindPeopleName(name... string) ([]People, error) {
+	res := []People{}
+	if err := CollectionCars().Find(bson.M{"name": bson.M{"$in": name}}).All(&res); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func FindPeopleAge(personAge... int) ([]People, error) {
+	res := []People{}
+	fmt.Printf("\n carAge %s", personAge)
+	if err := CollectionCars().Find(bson.M{"age": bson.M{"$in": personAge }}).All(&res); err != nil {
 		return nil, err
 	}
 	return res, nil
@@ -155,17 +164,17 @@ func UpdateOnePerson(id string, p *People) (*People, error) {
 	return &res, nil
 }
 
-func UpdateOneCar(id string, res *Cars) (*Cars, error) {
+func UpdateOneCar(id string, c *Cars) (*Cars, error) {
 	if err := CollectionCars().Update(bson.M{
 		"_id": bson.ObjectIdHex(id),
 	}, bson.M{
 		"$set": bson.M{
-			"model": res.Model,
-			"age":   res.Age,
-			"price": res.Price,
+			"model": c.Model,
+			"age":   c.Age,
+			"price": c.Price,
 		}}); err != nil {
 		return nil, err
 	}
-	return res, nil
+	return c, nil
 
 }

@@ -31,8 +31,5 @@ func main() {
 
 	//r.HandleFunc("/filter/cars", filter.NewHandler).Methods("GET")
 
-
-
-
 	http.ListenAndServe(":3003", r)
 }

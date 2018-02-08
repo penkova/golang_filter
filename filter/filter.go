@@ -41,87 +41,113 @@ func GetCarsFilter(w http.ResponseWriter, req *http.Request) {
 			handleError(err, "\t\t Failed to read database: %v", w)
 			return
 		}
+
 		json.NewEncoder(w).Encode(rs)
 		return
 	}
-	//if valueAgeCar != "" {
-	//	carAge := valuesQuery["age"]
-	//	fmt.Println("GET params age:", carAge)
-	//
-	//	for _ , value := range carAge {
-	//		valueAgeIntCar, _:= strconv.Atoi(value)
-	//		rs, err := db.FindCarAge(valueAgeIntCar)
-	//		if err != nil {
-	//			handleError(err, "\n\t\t Failed to read database: %v", w)
-	//			return
-	//		}
-	//	json.NewEncoder(w).Encode(rs)
-	//	}
-	//	return
-	//}
-	if valueAgeIntCar != 0 {
+	if  valueModel != "" && valueAgeIntCar != 0 {
 		ageCar := valuesQuery["age"]
-		for i := 0; i < len(ageCar); i++ {
-			fmt.Printf("\n value %s", ageCar[i])
-			valueAge, _ := strconv.Atoi(ageCar[i])
-			fmt.Println("GET params carAge:", ageCar)
-			rs, err := db.FindCarAge(valueAge)
+		valueAgeCar := []int{}
+		for _, v := range ageCar {
+			valueAge, err := strconv.Atoi(v)
 			if err != nil {
-				handleError(err, "\n\t\t Failed to read database: %v", w)
+				handleError(err, "\t\t Failed to convertation: %v", w)
 				return
 			}
-			json.NewEncoder(w).Encode(rs)
-			return
-			//ageCar := valuesQuery["age"]
-			//fmt.Println("GET params carAge:", ageCar)
-			//rs, err := db.FindCarAge(ageCar...)
-			//if err != nil {
-			//	handleError(err, "\n\t\t Failed to read database: %v", w)
-			//	return
-			//}
-			//json.NewEncoder(w).Encode(rs)
-			//return
+			valueAgeCar = append(valueAgeCar, valueAge)
 		}
+		rs, err := db.FindCarAge(valueAgeCar...)
+		if err != nil {
+			handleError(err, "\n\t\t Failed to read database: %v", w)
+			return
+		}
+		json.NewEncoder(w).Encode(rs)
+		return
 	}
 
-	//notice := "Query string is:" + req.Method + req.URL.String()
-	//log.Println(notice)
-	//valuesFromQuery := req.URL.Query()
-	//param1 := valuesFromQuery.Get("name")
-	//if param1 != "" {
-	//	// ... process it, will be the first (only) if multiple were given
-	//	// note: if they pass in like ?param1=&param2= param1 will also be "" :|
-	//}
-	//param1s := valuesFromQuery["param1"]
-	//if param1s != nil {
-	//	// ... process them ... or you could just iterate over them without a nil check
-	//	// [if none were present, will be a nil array, which golang treats as an empty array]
-	//	// this way you can also tell if they passed in the parameter as the empty string
-	//	// it will be an element of the array that is the empty string
+
+	//if valueAgeIntCar != 0 {
+	//	ageCar := valuesQuery["age"]
+	//	valueAgeCar := []int{}
+	//	for _, v := range ageCar {
+	//		valueAge, err := strconv.Atoi(v)
+	//		if err != nil {
+	//			handleError(err, "\t\t Failed to convertation: %v", w)
+	//			return
+	//		}
+	//		valueAgeCar = append(valueAgeCar, valueAge)
+	//	}
+	//	rs, err := db.FindCarAge(valueAgeCar...)
+	//	if err != nil {
+	//		handleError(err, "\n\t\t Failed to read database: %v", w)
+	//		return
+	//	}
+	//	json.NewEncoder(w).Encode(rs)
+	//	return
 	//}
 }
 
 func GetPeopleFilter(w http.ResponseWriter, req *http.Request) {
+	w.Write([]byte("Filter for People by name: \n \t"))
+
+	valuesQuery := req.URL.Query()
+	fmt.Println("values:", valuesQuery)
+
+	// Filtering by name
+	valueName := valuesQuery.Get("name")
+
+	valueAgePersonString := valuesQuery.Get("age")
+	valueAgepersonInt, _ := strconv.Atoi(valueAgePersonString)
+
+	fmt.Fprintf(w, "name: %s \n \t", valueName)
+	fmt.Fprintf(w, "Age Int: %d \n \t", valueAgepersonInt)
+
+
+
+	if valueName != "" {
+		namePerson := valuesQuery["name"]
+		fmt.Println("GET params model:", namePerson)
+		rs, err := db.FindPeopleName(namePerson...)
+		if err != nil {
+			handleError(err, "\t\t Failed to read database: %v", w)
+			return
+		}
+
+		json.NewEncoder(w).Encode(rs)
+		return
+	}
+	if  valueName != "" && valueAgepersonInt != 0 {
+		agePerson := valuesQuery["age"]
+		valueAgePerson := []int{}
+		for _, v := range agePerson {
+			valueAge, err := strconv.Atoi(v)
+			if err != nil {
+				handleError(err, "\t\t Failed to convertation: %v", w)
+				return
+			}
+			valueAgePerson = append(valueAgePerson, valueAge)
+		}
+		rs, err := db.FindPeopleAge(valueAgePerson...)
+		if err != nil {
+			handleError(err, "\n\t\t Failed to read database: %v", w)
+			return
+		}
+		json.NewEncoder(w).Encode(rs)
+		return
+	}
+
 
 }
 
 func NewHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("GET params were:", r.URL.Query())
 
-	// if only one expected
 	param1 := r.URL.Query().Get("param1")
 	if param1 != "" {
-		// ... process it, will be the first (only) if multiple were given
-		// note: if they pass in like ?param1=&param2= param1 will also be "" :|
 	}
 
-	// if multiples possible, or to process empty values like param1 in
-	// ?param1=&param2=something
 	param1s := r.URL.Query()["param1"]
 	if param1s != nil {
-		// ... process them ... or you could just iterate over them without a nil check
-		// [if none were present, will be a nil array, which golang treats as an empty array]
-		// this way you can also tell if they passed in the parameter as the empty string
-		// it will be an element of the array that is the empty string
+
 	}
 }
