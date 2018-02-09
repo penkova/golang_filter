@@ -13,49 +13,60 @@ func handleError(err error, message string, w http.ResponseWriter) {
 	w.Write([]byte(fmt.Sprintf(message, err)))
 }
 
-// Filtering by Car
+// -- Filtering by Car
 func GetCarsFilter(w http.ResponseWriter, req *http.Request) {
 	w.Write([]byte("Filter for Cars by model: \n \t"))
 
 	valuesQuery := req.URL.Query()
 	fmt.Println("values:", valuesQuery)
 
-	// Filtering by model
 	valueModel := valuesQuery.Get("model")
+	modelsCar := valuesQuery["model"]
 
 	valueAgeCarString := valuesQuery.Get("age")
 	valueAgeIntCar, _ := strconv.Atoi(valueAgeCarString)
+	ageCar := valuesQuery["age"]
+	valueAgeCar := []int{}
+	for _, v := range ageCar {
+		valueAge, err := strconv.Atoi(v)
+		if err != nil {
+			handleError(err, "\t\t Failed to convertation: %v", w)
+			return
+		}
+		valueAgeCar = append(valueAgeCar, valueAge)
+	}
 
 	valuePriceCarString := valuesQuery.Get("price")
 	valuePriceIntCar, _ := strconv.Atoi(valuePriceCarString)
 
-	fmt.Fprintf(w, "Model: %s \n \t", valueModel)
-	fmt.Fprintf(w, "Age Int: %d \n \t", valueAgeIntCar)
+	fmt.Fprintf(w, "Model: %s \n \t", modelsCar)
+	fmt.Fprintf(w, "Age Int: %d \n \t", valueAgeCar)
 	fmt.Fprintf(w, "Price Int: %d \n \t", valuePriceIntCar)
 
-	if valueModel != "" {
-		modelsCar := valuesQuery["model"]
-		fmt.Println("GET params model:", modelsCar)
+	if valueModel != "" && valueAgeIntCar != 0 {
+		// Filtering by model and age(once) car
+		fmt.Println("Filtering by model and age. Params model and age:", modelsCar, valueAgeCar)
+		rs, err := db.FindCarAgeName(valueAgeCar, modelsCar)
+		if err != nil {
+			handleError(err, "\n\t\t Failed to read database: %v", w)
+			return
+		}
+		json.NewEncoder(w).Encode(rs)
+		return
+	} else if valueAgeIntCar == 0 {
+		// Filtering by model
+		fmt.Println("Filtering by model. Params model:", modelsCar)
 		rs, err := db.FindCarModel(modelsCar...)
 		if err != nil {
 			handleError(err, "\t\t Failed to read database: %v", w)
 			return
 		}
-
 		json.NewEncoder(w).Encode(rs)
 		return
-	}
-	if  valueModel != "" && valueAgeIntCar != 0 {
-		ageCar := valuesQuery["age"]
-		valueAgeCar := []int{}
-		for _, v := range ageCar {
-			valueAge, err := strconv.Atoi(v)
-			if err != nil {
-				handleError(err, "\t\t Failed to convertation: %v", w)
-				return
-			}
-			valueAgeCar = append(valueAgeCar, valueAge)
-		}
+	} else if valueModel == "" {
+		// Filtering by age car
+		fmt.Println("Filtering by age. Params age:", modelsCar)
+
 		rs, err := db.FindCarAge(valueAgeCar...)
 		if err != nil {
 			handleError(err, "\n\t\t Failed to read database: %v", w)
@@ -64,69 +75,59 @@ func GetCarsFilter(w http.ResponseWriter, req *http.Request) {
 		json.NewEncoder(w).Encode(rs)
 		return
 	}
-
-
-	//if valueAgeIntCar != 0 {
-	//	ageCar := valuesQuery["age"]
-	//	valueAgeCar := []int{}
-	//	for _, v := range ageCar {
-	//		valueAge, err := strconv.Atoi(v)
-	//		if err != nil {
-	//			handleError(err, "\t\t Failed to convertation: %v", w)
-	//			return
-	//		}
-	//		valueAgeCar = append(valueAgeCar, valueAge)
-	//	}
-	//	rs, err := db.FindCarAge(valueAgeCar...)
-	//	if err != nil {
-	//		handleError(err, "\n\t\t Failed to read database: %v", w)
-	//		return
-	//	}
-	//	json.NewEncoder(w).Encode(rs)
-	//	return
-	//}
 }
 
+// -- Filtering by People
 func GetPeopleFilter(w http.ResponseWriter, req *http.Request) {
 	w.Write([]byte("Filter for People by name: \n \t"))
 
 	valuesQuery := req.URL.Query()
 	fmt.Println("values:", valuesQuery)
 
-	// Filtering by name
 	valueName := valuesQuery.Get("name")
+	namePerson := valuesQuery["name"]
 
 	valueAgePersonString := valuesQuery.Get("age")
-	valueAgepersonInt, _ := strconv.Atoi(valueAgePersonString)
+	valueAgePersonInt, _ := strconv.Atoi(valueAgePersonString)
 
-	fmt.Fprintf(w, "name: %s \n \t", valueName)
-	fmt.Fprintf(w, "Age Int: %d \n \t", valueAgepersonInt)
+	agePerson := valuesQuery["age"]
+	valueAgePerson := []int{}
+	for _, v := range agePerson {
+		valueAge, err := strconv.Atoi(v)
+		if err != nil {
+			handleError(err, "\t\t Failed to convertation: %v", w)
+			return
+		}
+		valueAgePerson = append(valueAgePerson, valueAge)
+	}
 
+	fmt.Fprintf(w, "Name: %s \n \t", valueName)
+	fmt.Fprintf(w, "Age Int: %d \n \t", valueAgePersonInt)
 
-
-	if valueName != "" {
-		namePerson := valuesQuery["name"]
-		fmt.Println("GET params model:", namePerson)
+	if valueName != "" && valueAgePersonInt != 0 {
+		// Filtering by model and age(once) person
+		fmt.Println("Filtering by model and age. Params model and age:", namePerson, valueAgePerson)
+		rs, err := db.FindPeopleAgeName(valueAgePerson, namePerson)
+		if err != nil {
+			handleError(err, "\n\t\t Failed to read database: %v", w)
+			return
+		}
+		json.NewEncoder(w).Encode(rs)
+		return
+	} else if valueAgePersonInt == 0 {
+		// Filtering by name
+		fmt.Println("Filtering by model. Params model:", namePerson)
 		rs, err := db.FindPeopleName(namePerson...)
 		if err != nil {
 			handleError(err, "\t\t Failed to read database: %v", w)
 			return
 		}
-
 		json.NewEncoder(w).Encode(rs)
 		return
-	}
-	if  valueName != "" && valueAgepersonInt != 0 {
-		agePerson := valuesQuery["age"]
-		valueAgePerson := []int{}
-		for _, v := range agePerson {
-			valueAge, err := strconv.Atoi(v)
-			if err != nil {
-				handleError(err, "\t\t Failed to convertation: %v", w)
-				return
-			}
-			valueAgePerson = append(valueAgePerson, valueAge)
-		}
+	} else if valueName == "" {
+		// Filtering by age person
+		fmt.Println("Filtering by age. Params age:", valueAgePerson)
+
 		rs, err := db.FindPeopleAge(valueAgePerson...)
 		if err != nil {
 			handleError(err, "\n\t\t Failed to read database: %v", w)
@@ -135,19 +136,8 @@ func GetPeopleFilter(w http.ResponseWriter, req *http.Request) {
 		json.NewEncoder(w).Encode(rs)
 		return
 	}
-
-
 }
 
-func NewHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("GET params were:", r.URL.Query())
-
-	param1 := r.URL.Query().Get("param1")
-	if param1 != "" {
-	}
-
-	param1s := r.URL.Query()["param1"]
-	if param1s != nil {
-
-	}
+func GetFilter(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("You can filter on cars or people! \n \t"))
 }

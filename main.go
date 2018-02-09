@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/gorilla/mux"
-	"net/http"
 	"github.com/user/mongo_filter/api"
+	"net/http"
 	//"github.com/user/mongo_filter/filter"
 	"github.com/user/mongo_filter/filter"
 )
@@ -28,8 +28,7 @@ func main() {
 	// Request for filtering items
 	r.HandleFunc("/filter/people", filter.GetPeopleFilter).Methods("GET")
 	r.HandleFunc("/filter/cars", filter.GetCarsFilter).Methods("GET")
-
-	//r.HandleFunc("/filter/cars", filter.NewHandler).Methods("GET")
+	r.HandleFunc("/filter", filter.GetFilter).Methods("GET")
 
 	http.ListenAndServe(":3003", r)
 }
