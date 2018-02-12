@@ -56,7 +56,7 @@ func GetCarsFilter(w http.ResponseWriter, req *http.Request) {
 	} else if valueAgeIntCar == 0 {
 		// Filtering by model
 		fmt.Println("Filtering by model. Params model:", modelsCar)
-		rs, err := db.FindCarModel(modelsCar...)
+		rs, err := db.FindCarModel(modelsCar)
 		if err != nil {
 			handleError(err, "\t\t Failed to read database: %v", w)
 			return
@@ -67,7 +67,7 @@ func GetCarsFilter(w http.ResponseWriter, req *http.Request) {
 		// Filtering by age car
 		fmt.Println("Filtering by age. Params age:", modelsCar)
 
-		rs, err := db.FindCarAge(valueAgeCar...)
+		rs, err := db.FindCarAge(valueAgeCar)
 		if err != nil {
 			handleError(err, "\n\t\t Failed to read database: %v", w)
 			return
@@ -117,7 +117,7 @@ func GetPeopleFilter(w http.ResponseWriter, req *http.Request) {
 	} else if valueAgePersonInt == 0 {
 		// Filtering by name
 		fmt.Println("Filtering by model. Params model:", namePerson)
-		rs, err := db.FindPeopleName(namePerson...)
+		rs, err := db.FindPeopleName(namePerson)
 		if err != nil {
 			handleError(err, "\t\t Failed to read database: %v", w)
 			return
@@ -128,7 +128,7 @@ func GetPeopleFilter(w http.ResponseWriter, req *http.Request) {
 		// Filtering by age person
 		fmt.Println("Filtering by age. Params age:", valueAgePerson)
 
-		rs, err := db.FindPeopleAge(valueAgePerson...)
+		rs, err := db.FindPeopleAge(valueAgePerson)
 		if err != nil {
 			handleError(err, "\n\t\t Failed to read database: %v", w)
 			return
@@ -139,5 +139,5 @@ func GetPeopleFilter(w http.ResponseWriter, req *http.Request) {
 }
 
 func GetFilter(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("You can filter on cars or people! \n \t"))
+	w.Write([]byte("You can filter by cars or people! \n \t"))
 }

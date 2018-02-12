@@ -30,5 +30,5 @@ func main() {
 	r.HandleFunc("/filter/cars", filter.GetCarsFilter).Methods("GET")
 	r.HandleFunc("/filter", filter.GetFilter).Methods("GET")
 
-	http.ListenAndServe(":3003", r)
+	http.ListenAndServe(":3030", r)
 }

@@ -1,0 +1,16 @@
+version: "3.3"
+
+services:
+    mongodb:
+      image: mongo
+      expose:
+        - "27017"
+      volumes:
+       - db_mongo:/data/db
+
+    app:
+        image: mongo-filter
+        ports:
+           - "8081:3030"
+volumes:
+    db_mongo:

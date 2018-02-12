@@ -38,7 +38,7 @@ type Cars struct {
 var db *mgo.Database
 
 func init() {
-	session, err := mgo.Dial("localhost:27018")
+	session, err := mgo.Dial("mongodb:27017")
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
@@ -54,14 +54,14 @@ func CollectionCars() *mgo.Collection {
 }
 
 // -- Finding Cars by some parameters
-func FindCarModel(model ...string) ([]Cars, error) {
+func FindCarModel(model []string) ([]Cars, error) {
 	res := []Cars{}
 	if err := CollectionCars().Find(bson.M{"model": bson.M{"$in": model}}).All(&res); err != nil {
 		return nil, err
 	}
 	return res, nil
 }
-func FindCarAge(carAge ...int) ([]Cars, error) {
+func FindCarAge(carAge []int) ([]Cars, error) {
 	res := []Cars{}
 	if err := CollectionCars().Find(bson.M{"age": bson.M{"$in": carAge}}).All(&res); err != nil {
 		return nil, err
@@ -80,14 +80,14 @@ func FindCarAgeName(carAge []int, model []string) ([]Cars, error) {
 }
 
 //	-- Finding People by some parameters
-func FindPeopleName(name ...string) ([]People, error) {
+func FindPeopleName(name []string) ([]People, error) {
 	res := []People{}
 	if err := CollectionCars().Find(bson.M{"name": bson.M{"$in": name}}).All(&res); err != nil {
 		return nil, err
 	}
 	return res, nil
 }
-func FindPeopleAge(personAge ...int) ([]People, error) {
+func FindPeopleAge(personAge []int) ([]People, error) {
 	res := []People{}
 	if err := CollectionCars().Find(bson.M{"age": bson.M{"$in": personAge}}).All(&res); err != nil {
 		return nil, err
