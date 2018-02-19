@@ -7,7 +7,7 @@ import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
-
+// -- People represents database entity.
 type People struct {
 	Id   bson.ObjectId `json:"id" bson:"_id"`
 	Name string        `json:"name" bson:"name"`
@@ -15,7 +15,7 @@ type People struct {
 	//car []Cars
 	// id = car_id
 }
-
+// -- Cars represents database entity.
 type Cars struct {
 	//car_id bson.ObjectId 	`json:"id" bson:"_id"`
 	Id    bson.ObjectId `json:"id" bson:"_id"`
@@ -24,20 +24,11 @@ type Cars struct {
 	Price int           `json:"price" bson:"price"`
 }
 
-//type Filter struct {
-//	Id     bson.ObjectId `json:"id" bson:"_id,omitempty"`
-//	Offset string        `json:"offset"`
-//	Limit  string        `json:"limit"`
-//	//Skip int			`json:"skip"`
-//	Name  string `json:"name"`
-//	Model string `json:"model"`
-//	Age   int    `json:"age"`
-//	Price int    `json:"price"`
-//}
-
 var db *mgo.Database
 
+// -- Establish a connection to MongoDB database.
 func init() {
+	//Getting a session
 	session, err := mgo.Dial("mongodb:27017")
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
@@ -45,41 +36,16 @@ func init() {
 	db = session.DB("crudmongo")
 }
 
-// -- Connection to cars and people collections
+// -- Connection to people collections
 func CollectionPerson() *mgo.Collection {
 	return db.C("peopledb")
 }
+// -- Connection to cars collections
 func CollectionCars() *mgo.Collection {
 	return db.C("carsdb")
 }
 
-// -- Finding Cars by some parameters
-func FindCarModel(model []string) ([]Cars, error) {
-	res := []Cars{}
-	if err := CollectionCars().Find(bson.M{"model": bson.M{"$in": model}}).All(&res); err != nil {
-		return nil, err
-	}
-	return res, nil
-}
-func FindCarAge(carAge []int) ([]Cars, error) {
-	res := []Cars{}
-	if err := CollectionCars().Find(bson.M{"age": bson.M{"$in": carAge}}).All(&res); err != nil {
-		return nil, err
-	}
-	return res, nil
-}
-func FindCarAgeName(carAge []int, model []string) ([]Cars, error) {
-	res := []Cars{}
-	if err := CollectionCars().Find(bson.M{
-		"model": bson.M{"$in": model},
-		"age":   bson.M{"$in": carAge},
-	}).All(&res); err != nil {
-		return nil, err
-	}
-	return res, nil
-}
-
-//	-- Finding People by some parameters
+// -- Finding person by name parameter..
 func FindPeopleName(name []string) ([]People, error) {
 	res := []People{}
 	if err := CollectionCars().Find(bson.M{"name": bson.M{"$in": name}}).All(&res); err != nil {
@@ -87,6 +53,7 @@ func FindPeopleName(name []string) ([]People, error) {
 	}
 	return res, nil
 }
+// -- Finding People by age parameter.
 func FindPeopleAge(personAge []int) ([]People, error) {
 	res := []People{}
 	if err := CollectionCars().Find(bson.M{"age": bson.M{"$in": personAge}}).All(&res); err != nil {
@@ -94,6 +61,7 @@ func FindPeopleAge(personAge []int) ([]People, error) {
 	}
 	return res, nil
 }
+// -- Finding People by name and age parameters.
 func FindPeopleAgeName(personAge []int, name []string) ([]People, error) {
 	res := []People{}
 	if err := CollectionCars().Find(bson.M{
@@ -105,7 +73,35 @@ func FindPeopleAgeName(personAge []int, name []string) ([]People, error) {
 	return res, nil
 }
 
-// -- GetAll returns all items from the database.
+// -- Finding Cars by model parameter.
+func FindCarModel(model []string) ([]Cars, error) {
+	res := []Cars{}
+	if err := CollectionCars().Find(bson.M{"model": bson.M{"$in": model}}).All(&res); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+// -- Finding Cars by age parameter.
+func FindCarAge(carAge []int) ([]Cars, error) {
+	res := []Cars{}
+	if err := CollectionCars().Find(bson.M{"age": bson.M{"$in": carAge}}).All(&res); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+// -- Finding Cars by model and age parameters.
+func FindCarAgeName(carAge []int, model []string) ([]Cars, error) {
+	res := []Cars{}
+	if err := CollectionCars().Find(bson.M{
+		"model": bson.M{"$in": model},
+		"age":   bson.M{"$in": carAge},
+	}).All(&res); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+// -- Returns all person from the database.
 func GetAllPerson() ([]People, error) {
 	res := []People{}
 
@@ -115,6 +111,7 @@ func GetAllPerson() ([]People, error) {
 
 	return res, nil
 }
+// -- Returns all cars from the database.
 func GetAllCars() ([]Cars, error) {
 	res := []Cars{}
 
@@ -125,15 +122,7 @@ func GetAllCars() ([]Cars, error) {
 	return res, nil
 }
 
-// -- GetOne returns a single item from the database.
-func GetOneCar(id string) (*Cars, error) {
-	res := Cars{}
-
-	if err := CollectionCars().FindId(bson.ObjectIdHex(id)).One(&res); err != nil {
-		return nil, err
-	}
-	return &res, nil
-}
+// -- Returns a single person from the database.
 func GetOnePerson(id string) (*People, error) {
 	res := People{}
 	fmt.Println(id)
@@ -144,24 +133,35 @@ func GetOnePerson(id string) (*People, error) {
 
 	return &res, nil
 }
+// -- Returns a single car from the database.
+func GetOneCar(id string) (*Cars, error) {
+	res := Cars{}
 
-// -- Create    inserts an item to the database.
+	if err := CollectionCars().FindId(bson.ObjectIdHex(id)).One(&res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+// -- Create  person to the database.
 func CreateOnePerson(person People) error {
 	return CollectionPerson().Insert(person)
 }
+// -- Create car to the database.
 func CreateOneCar(car Cars) error {
 	return CollectionCars().Insert(car)
 }
 
-// -- Remove deletes an item from the database
+// -- Remove person from the database
 func RemovePerson(id string) error {
 	return CollectionPerson().Remove(bson.M{"_id": bson.ObjectIdHex(id)})
 }
+// -- Remove car from the database
 func RemoveCar(id string) error {
 	return CollectionCars().Remove(bson.M{"_id": bson.ObjectIdHex(id)})
 }
 
-// -- Update
+// -- Update person from the database by id.
 func UpdateOnePerson(id string, p *People) (*People, error) {
 	res := People{}
 	if err := CollectionPerson().Update(bson.M{
@@ -175,6 +175,7 @@ func UpdateOnePerson(id string, p *People) (*People, error) {
 	}
 	return &res, nil
 }
+// -- Update car from the database y id.
 func UpdateOneCar(id string, c *Cars) (*Cars, error) {
 	if err := CollectionCars().Update(bson.M{
 		"_id": bson.ObjectIdHex(id),

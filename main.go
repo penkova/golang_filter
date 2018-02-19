@@ -4,13 +4,14 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/user/mongo_filter/api"
 	"net/http"
-	//"github.com/user/mongo_filter/filter"
 	"github.com/user/mongo_filter/filter"
 )
 
 func main() {
+	// Create routes
 	r := mux.NewRouter()
 
+	// --Creates a controller for cars endpoint
 	// Request for people
 	r.HandleFunc("/people", api.GetPeople).Methods("GET")
 	r.HandleFunc("/people/{id}", api.GetPerson).Methods("GET")

@@ -15,7 +15,7 @@ func handleError(err error, message string, w http.ResponseWriter) {
 	w.Write([]byte(fmt.Sprintf(message, err)))
 }
 
-//Get all item
+// -- Returns a list of all database people to the response.
 func GetPeople(w http.ResponseWriter, req *http.Request) {
 	rs, err := db.GetAllPerson()
 	if err != nil {
@@ -30,6 +30,7 @@ func GetPeople(w http.ResponseWriter, req *http.Request) {
 	}
 	w.Write(bs)
 }
+// -- Returns a list of all database cars to the response.
 func GetAllCars(w http.ResponseWriter, req *http.Request) {
 	rs, err := db.GetAllCars()
 	if err != nil {
@@ -45,7 +46,7 @@ func GetAllCars(w http.ResponseWriter, req *http.Request) {
 	w.Write(bs)
 }
 
-//Get one item
+// -- Returns a single database person matching given ID parameter.
 func GetPerson(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	id := vars["id"]
@@ -64,6 +65,7 @@ func GetPerson(w http.ResponseWriter, req *http.Request) {
 
 	w.Write(bs)
 }
+// -- Returns a single database car matching given ID parameter.
 func GetCar(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	id := vars["id"]
@@ -82,7 +84,7 @@ func GetCar(w http.ResponseWriter, req *http.Request) {
 	w.Write(bs)
 }
 
-// Delete. Removes a single item (identified by parameter) from the database.
+// -- Removes person (identified by parameter) from the database.
 func DeletePerson(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	id := vars["id"]
@@ -93,6 +95,7 @@ func DeletePerson(w http.ResponseWriter, req *http.Request) {
 	}
 	w.Write([]byte("OK," + id + " has been deleted"))
 }
+// -- Removes car (identified by parameter) from the database.
 func DeleteCar(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	id := vars["id"]
@@ -104,7 +107,7 @@ func DeleteCar(w http.ResponseWriter, req *http.Request) {
 	w.Write([]byte("OK," + id + " has been deleted"))
 }
 
-//Create item. Saves an item (form data) into the database.
+// -- Create person into the database.
 func CreatePerson(w http.ResponseWriter, req *http.Request) {
 	w.Write([]byte("Create person: "))
 	var person db.People
@@ -120,6 +123,7 @@ func CreatePerson(w http.ResponseWriter, req *http.Request) {
 
 	json.NewEncoder(w).Encode(person)
 }
+// -- Create car into the database.
 func CreateCar(w http.ResponseWriter, req *http.Request) {
 	w.Write([]byte("Create Car: "))
 	var car db.Cars
@@ -136,7 +140,7 @@ func CreateCar(w http.ResponseWriter, req *http.Request) {
 	json.NewEncoder(w).Encode(car)
 }
 
-//Update item
+// -- Update person (identified by parameter) from the database.
 func UpdatePerson(w http.ResponseWriter, req *http.Request) {
 	w.Write([]byte("Update Person: "))
 
@@ -159,6 +163,7 @@ func UpdatePerson(w http.ResponseWriter, req *http.Request) {
 	}
 	w.Write(bs)
 }
+// -- Update car(identified by parameter) from the database.
 func UpdateCar(w http.ResponseWriter, req *http.Request) {
 	w.Write([]byte("Update Person: "))
 

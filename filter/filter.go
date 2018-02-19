@@ -13,7 +13,7 @@ func handleError(err error, message string, w http.ResponseWriter) {
 	w.Write([]byte(fmt.Sprintf(message, err)))
 }
 
-// -- Filtering by Car
+// -- Filtering cars by some parameters.
 func GetCarsFilter(w http.ResponseWriter, req *http.Request) {
 	w.Write([]byte("Filter for Cars by model: \n \t"))
 
@@ -27,6 +27,7 @@ func GetCarsFilter(w http.ResponseWriter, req *http.Request) {
 	valueAgeIntCar, _ := strconv.Atoi(valueAgeCarString)
 	ageCar := valuesQuery["age"]
 	valueAgeCar := []int{}
+
 	for _, v := range ageCar {
 		valueAge, err := strconv.Atoi(v)
 		if err != nil {
@@ -36,12 +37,12 @@ func GetCarsFilter(w http.ResponseWriter, req *http.Request) {
 		valueAgeCar = append(valueAgeCar, valueAge)
 	}
 
-	valuePriceCarString := valuesQuery.Get("price")
-	valuePriceIntCar, _ := strconv.Atoi(valuePriceCarString)
+	//valuePriceCarString := valuesQuery.Get("price")
+	//valuePriceIntCar, _ := strconv.Atoi(valuePriceCarString)
 
 	fmt.Fprintf(w, "Model: %s \n \t", modelsCar)
 	fmt.Fprintf(w, "Age Int: %d \n \t", valueAgeCar)
-	fmt.Fprintf(w, "Price Int: %d \n \t", valuePriceIntCar)
+	//fmt.Fprintf(w, "Price Int: %d \n \t", valuePriceIntCar)
 
 	if valueModel != "" && valueAgeIntCar != 0 {
 		// Filtering by model and age(once) car
@@ -77,7 +78,7 @@ func GetCarsFilter(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-// -- Filtering by People
+// -- Filtering people by some parameters.
 func GetPeopleFilter(w http.ResponseWriter, req *http.Request) {
 	w.Write([]byte("Filter for People by name: \n \t"))
 
