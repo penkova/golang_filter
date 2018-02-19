@@ -10,6 +10,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+//error processing
 func handleError(err error, message string, w http.ResponseWriter) {
 	w.WriteHeader(http.StatusInternalServerError)
 	w.Write([]byte(fmt.Sprintf(message, err)))
@@ -30,6 +31,7 @@ func GetPeople(w http.ResponseWriter, req *http.Request) {
 	}
 	w.Write(bs)
 }
+
 // -- Returns a list of all database cars to the response.
 func GetAllCars(w http.ResponseWriter, req *http.Request) {
 	rs, err := db.GetAllCars()
@@ -65,6 +67,7 @@ func GetPerson(w http.ResponseWriter, req *http.Request) {
 
 	w.Write(bs)
 }
+
 // -- Returns a single database car matching given ID parameter.
 func GetCar(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
@@ -95,6 +98,7 @@ func DeletePerson(w http.ResponseWriter, req *http.Request) {
 	}
 	w.Write([]byte("OK," + id + " has been deleted"))
 }
+
 // -- Removes car (identified by parameter) from the database.
 func DeleteCar(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
@@ -123,6 +127,7 @@ func CreatePerson(w http.ResponseWriter, req *http.Request) {
 
 	json.NewEncoder(w).Encode(person)
 }
+
 // -- Create car into the database.
 func CreateCar(w http.ResponseWriter, req *http.Request) {
 	w.Write([]byte("Create Car: "))
@@ -163,6 +168,7 @@ func UpdatePerson(w http.ResponseWriter, req *http.Request) {
 	}
 	w.Write(bs)
 }
+
 // -- Update car(identified by parameter) from the database.
 func UpdateCar(w http.ResponseWriter, req *http.Request) {
 	w.Write([]byte("Update Person: "))

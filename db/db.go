@@ -7,6 +7,7 @@ import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
+
 // -- People represents database entity.
 type People struct {
 	Id   bson.ObjectId `json:"id" bson:"_id"`
@@ -15,6 +16,7 @@ type People struct {
 	//car []Cars
 	// id = car_id
 }
+
 // -- Cars represents database entity.
 type Cars struct {
 	//car_id bson.ObjectId 	`json:"id" bson:"_id"`
@@ -40,6 +42,7 @@ func init() {
 func CollectionPerson() *mgo.Collection {
 	return db.C("peopledb")
 }
+
 // -- Connection to cars collections
 func CollectionCars() *mgo.Collection {
 	return db.C("carsdb")
@@ -53,6 +56,7 @@ func FindPeopleName(name []string) ([]People, error) {
 	}
 	return res, nil
 }
+
 // -- Finding People by age parameter.
 func FindPeopleAge(personAge []int) ([]People, error) {
 	res := []People{}
@@ -61,6 +65,7 @@ func FindPeopleAge(personAge []int) ([]People, error) {
 	}
 	return res, nil
 }
+
 // -- Finding People by name and age parameters.
 func FindPeopleAgeName(personAge []int, name []string) ([]People, error) {
 	res := []People{}
@@ -81,6 +86,7 @@ func FindCarModel(model []string) ([]Cars, error) {
 	}
 	return res, nil
 }
+
 // -- Finding Cars by age parameter.
 func FindCarAge(carAge []int) ([]Cars, error) {
 	res := []Cars{}
@@ -89,6 +95,7 @@ func FindCarAge(carAge []int) ([]Cars, error) {
 	}
 	return res, nil
 }
+
 // -- Finding Cars by model and age parameters.
 func FindCarAgeName(carAge []int, model []string) ([]Cars, error) {
 	res := []Cars{}
@@ -111,6 +118,7 @@ func GetAllPerson() ([]People, error) {
 
 	return res, nil
 }
+
 // -- Returns all cars from the database.
 func GetAllCars() ([]Cars, error) {
 	res := []Cars{}
@@ -133,6 +141,7 @@ func GetOnePerson(id string) (*People, error) {
 
 	return &res, nil
 }
+
 // -- Returns a single car from the database.
 func GetOneCar(id string) (*Cars, error) {
 	res := Cars{}
@@ -147,6 +156,7 @@ func GetOneCar(id string) (*Cars, error) {
 func CreateOnePerson(person People) error {
 	return CollectionPerson().Insert(person)
 }
+
 // -- Create car to the database.
 func CreateOneCar(car Cars) error {
 	return CollectionCars().Insert(car)
@@ -156,6 +166,7 @@ func CreateOneCar(car Cars) error {
 func RemovePerson(id string) error {
 	return CollectionPerson().Remove(bson.M{"_id": bson.ObjectIdHex(id)})
 }
+
 // -- Remove car from the database
 func RemoveCar(id string) error {
 	return CollectionCars().Remove(bson.M{"_id": bson.ObjectIdHex(id)})
@@ -175,6 +186,7 @@ func UpdateOnePerson(id string, p *People) (*People, error) {
 	}
 	return &res, nil
 }
+
 // -- Update car from the database y id.
 func UpdateOneCar(id string, c *Cars) (*Cars, error) {
 	if err := CollectionCars().Update(bson.M{

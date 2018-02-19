@@ -3,8 +3,8 @@ package main
 import (
 	"github.com/gorilla/mux"
 	"github.com/user/mongo_filter/api"
-	"net/http"
 	"github.com/user/mongo_filter/filter"
+	"net/http"
 )
 
 func main() {
