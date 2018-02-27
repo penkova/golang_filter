@@ -3,7 +3,7 @@ package filter
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/user/mongo_filter/db"
+	"github.com/user/golang_filter/db"
 	"net/http"
 	"strconv"
 )
@@ -13,7 +13,7 @@ func handleError(err error, message string, w http.ResponseWriter) {
 	w.Write([]byte(fmt.Sprintf(message, err)))
 }
 
-// -- Filtering cars by some parameters.
+// GetCarsFilter -- Filtering cars by some parameters.
 func GetCarsFilter(w http.ResponseWriter, req *http.Request) {
 	w.Write([]byte("Filter for Cars by model: \n \t"))
 
@@ -78,7 +78,7 @@ func GetCarsFilter(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-// -- Filtering people by some parameters.
+// GetPeopleFilter -- Filtering people by some parameters.
 func GetPeopleFilter(w http.ResponseWriter, req *http.Request) {
 	w.Write([]byte("Filter for People by name: \n \t"))
 

@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/gorilla/mux"
-	"github.com/user/mongo_filter/api"
-	"github.com/user/mongo_filter/filter"
+	"github.com/user/golang_filter/api"
+	"github.com/user/golang_filter/filter"
 	"net/http"
 )
 

@@ -38,17 +38,17 @@ func init() {
 	db = session.DB("crudmongo")
 }
 
-// -- Connection to people collections
+// CollectionPerson -- Connection to people collections
 func CollectionPerson() *mgo.Collection {
 	return db.C("peopledb")
 }
 
-// -- Connection to cars collections
+// CollectionCars -- Connection to cars collections
 func CollectionCars() *mgo.Collection {
 	return db.C("carsdb")
 }
 
-// -- Finding person by name parameter..
+// FindPeopleName -- Finding person by name parameter..
 func FindPeopleName(name []string) ([]People, error) {
 	res := []People{}
 	if err := CollectionCars().Find(bson.M{"name": bson.M{"$in": name}}).All(&res); err != nil {
@@ -57,7 +57,7 @@ func FindPeopleName(name []string) ([]People, error) {
 	return res, nil
 }
 
-// -- Finding People by age parameter.
+// FindPeopleAge -- Finding People by age parameter.
 func FindPeopleAge(personAge []int) ([]People, error) {
 	res := []People{}
 	if err := CollectionCars().Find(bson.M{"age": bson.M{"$in": personAge}}).All(&res); err != nil {
@@ -66,7 +66,7 @@ func FindPeopleAge(personAge []int) ([]People, error) {
 	return res, nil
 }
 
-// -- Finding People by name and age parameters.
+// FindPeopleAgeName -- Finding People by name and age parameters.
 func FindPeopleAgeName(personAge []int, name []string) ([]People, error) {
 	res := []People{}
 	if err := CollectionCars().Find(bson.M{
@@ -78,7 +78,7 @@ func FindPeopleAgeName(personAge []int, name []string) ([]People, error) {
 	return res, nil
 }
 
-// -- Finding Cars by model parameter.
+// FindCarModel -- Finding Cars by model parameter.
 func FindCarModel(model []string) ([]Cars, error) {
 	res := []Cars{}
 	if err := CollectionCars().Find(bson.M{"model": bson.M{"$in": model}}).All(&res); err != nil {
@@ -87,7 +87,7 @@ func FindCarModel(model []string) ([]Cars, error) {
 	return res, nil
 }
 
-// -- Finding Cars by age parameter.
+// FindCarAge -- Finding Cars by age parameter.
 func FindCarAge(carAge []int) ([]Cars, error) {
 	res := []Cars{}
 	if err := CollectionCars().Find(bson.M{"age": bson.M{"$in": carAge}}).All(&res); err != nil {
@@ -96,7 +96,7 @@ func FindCarAge(carAge []int) ([]Cars, error) {
 	return res, nil
 }
 
-// -- Finding Cars by model and age parameters.
+// FindCarAgeName -- Finding Cars by model and age parameters.
 func FindCarAgeName(carAge []int, model []string) ([]Cars, error) {
 	res := []Cars{}
 	if err := CollectionCars().Find(bson.M{
@@ -108,7 +108,7 @@ func FindCarAgeName(carAge []int, model []string) ([]Cars, error) {
 	return res, nil
 }
 
-// -- Returns all person from the database.
+// GetAllPerson -- Returns all person from the database.
 func GetAllPerson() ([]People, error) {
 	res := []People{}
 
@@ -119,7 +119,7 @@ func GetAllPerson() ([]People, error) {
 	return res, nil
 }
 
-// -- Returns all cars from the database.
+// GetAllCars -- Returns all cars from the database.
 func GetAllCars() ([]Cars, error) {
 	res := []Cars{}
 
@@ -130,7 +130,7 @@ func GetAllCars() ([]Cars, error) {
 	return res, nil
 }
 
-// -- Returns a single person from the database.
+// GetOnePerson -- Returns a single person from the database.
 func GetOnePerson(id string) (*People, error) {
 	res := People{}
 	fmt.Println(id)
@@ -142,7 +142,7 @@ func GetOnePerson(id string) (*People, error) {
 	return &res, nil
 }
 
-// -- Returns a single car from the database.
+// GetOneCar -- Returns a single car from the database.
 func GetOneCar(id string) (*Cars, error) {
 	res := Cars{}
 
@@ -152,27 +152,27 @@ func GetOneCar(id string) (*Cars, error) {
 	return &res, nil
 }
 
-// -- Create  person to the database.
+// CreateOnePerson -- Create  person to the database.
 func CreateOnePerson(person People) error {
 	return CollectionPerson().Insert(person)
 }
 
-// -- Create car to the database.
+// CreateOneCar -- Create car to the database.
 func CreateOneCar(car Cars) error {
 	return CollectionCars().Insert(car)
 }
 
-// -- Remove person from the database
+// RemovePerson -- Remove person from the database
 func RemovePerson(id string) error {
 	return CollectionPerson().Remove(bson.M{"_id": bson.ObjectIdHex(id)})
 }
 
-// -- Remove car from the database
+// RemoveCar -- Remove car from the database
 func RemoveCar(id string) error {
 	return CollectionCars().Remove(bson.M{"_id": bson.ObjectIdHex(id)})
 }
 
-// -- Update person from the database by id.
+// UpdateOnePerson -- Update person from the database by id.
 func UpdateOnePerson(id string, p *People) (*People, error) {
 	res := People{}
 	if err := CollectionPerson().Update(bson.M{
@@ -187,7 +187,7 @@ func UpdateOnePerson(id string, p *People) (*People, error) {
 	return &res, nil
 }
 
-// -- Update car from the database y id.
+// UpdateOneCar -- Update car from the database y id.
 func UpdateOneCar(id string, c *Cars) (*Cars, error) {
 	if err := CollectionCars().Update(bson.M{
 		"_id": bson.ObjectIdHex(id),
